@@ -1,3 +1,83 @@
-<app-handtracker (onPrediction)="prediction($event)"></app-handtracker>
+<div [style.background-image]="background" [style.background-size] = "'cover'">
 
-<div [innerHTML]="gesture"></div>
+    <!--Reset and Mute Buttons-->
+    <div class="topBtn row">
+        <div class="col col-sm">
+            <button type="button" class="btn btn-lg btn-block btn-primary attackBtn topBtns">Restart</button>
+            <img class="handSprite" src="../../assets/images/CloseHand.png" alt="Sprite of a Closed Hand">
+            <img class="handSprite" src="../../assets/images/PointHand.png" alt="Sprite of a Pointed Hand">
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-lg btn-block btn-primary attackBtn topBtns">{{soundInfo}}</button>
+            <img class="handSprite" src="../../assets/images/CloseHand.png" alt="Sprite of a Closed Hand">
+            <img class="handSprite" src="../../assets/images/OpenHand.png" alt="Sprite of an Open Hand">
+        </div>
+    </div>
+
+    <!--Health Bars and Camera-->
+    <div class="row">
+        <h1 class="col col-md-4 health" [style.visibility]="healthDisplay">Current Health : {{playerHealth}}/100</h1>
+        <h1 class="col col-md-4 health" [style.visibility]="healthDisplay">Enemy Health : {{enemyHealth}}/100</h1>
+        <app-handtracker class="col col-md-4" (onPrediction)="prediction($event)"></app-handtracker>
+    </div>
+
+    <!--Signify to user what gesture-->
+    <button *ngIf="gesture != ''" type="button" class="btn btn-lg btn-block btn-primary handMove">{{gesture}}</button>
+
+    <!--GameOver Screen-->
+    <div *ngIf="gameOver" class="textbox centeredText">
+        <p style="font-size: 200%;">Game Over :(</p>
+    </div>
+
+    <!--Character Sprites-->
+    <div *ngIf="!gameOver" class="row characters">
+        <div class="spriteContainer col col-2">
+            <img class="hero" src="../../assets/images/hero.png" alt="Hero Sprite">
+            <!--Different Animations Based on Combat-->
+            <img *ngIf="slashedE" class="combatAnim" src="../../assets/images/undertale-slash-pixels.gif" alt="Slash animation" style="left: 35%;">
+            <img *ngIf="guarded" class="combatAnim" src="../../assets/images/Guard.gif" alt="Guard animation" style="left: 25%;">
+            <img *ngIf="healed" class="combatAnim" src="../../assets/images/heal.gif" alt="Heal animation" style="left: 20%;">
+        </div>
+        <div class="spriteContainer col col-2">
+            <img *ngIf="gameStarted" class="enemy" [src]="enemySprite" alt="Enemy Sprite">
+            <!--Different Animations Based on Combat-->
+            <img *ngIf="slashed" class="combatAnim" src="../../assets/images/undertale-slash-pixels.gif" alt="Slash animation" style="left: 20%;">
+            <img *ngIf="sparkled" class="combatAnim" src="../../assets/images/MagicAttack.gif" alt="Magic attack animation" style="bottom: 30%;">
+        </div>
+    </div>
+
+    <div *ngIf="gameWon" style="display: flex; justify-content: center">
+        <img src="../../assets/images/GoldenCucumber.png" alt="Sprite of the Golden Cucumber">
+    </div>
+    
+
+    <!--Combat Menu-->
+    <div *ngIf="(displayText == '') && !gameOver && gameStarted" class="fightbox">
+        <div class="row">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary attackBtn col col-6" (click)="enemyAttack()">Melee Attack</button>
+            <img class="attackSprite" src="../../assets/images/CloseHand.png" alt="Sprite of a Closed Hand">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary attackBtn col col-6">Self-Heal</button>
+            <img class="attackSprite" src="../../assets/images/PointHand.png" alt="Sprite of a Pointed Hand">
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary attackBtn col col-6">Magic Atttack</button>
+            <img class="attackSprite" src="../../assets/images/OpenHand.png" alt="Sprite of an Open Hand">
+            <img class="attackSprite" src="../../assets/images/OpenHand.png" alt="Sprite of an Open Hand">
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary attackBtn col col-6">Self-Guard</button>
+            <img class="attackSprite" src="../../assets/images/CloseHand.png" alt="Sprite of a Closed Hand">
+            <img class="attackSprite" src="../../assets/images/CloseHand.png" alt="Sprite of a Closed Hand">
+        </div>
+    </div>
+
+    <!--Text Menu-->
+    <div *ngIf="displayText != '' && !gameOver" class="textbox">
+        <p>{{displayText}}</p>
+        <div class="textIcon">
+            <img class="textHandSprite" src="../../assets/images/OpenHand.png" style="margin-bottom: 10px; margin-right: 10px;" alt="Sprite of an Open Hand">
+        </div>
+    </div>
+
+</div>
+
+
+
